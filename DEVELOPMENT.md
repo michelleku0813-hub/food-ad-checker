@@ -50,6 +50,34 @@ npm run dev
 | `src/app/api/judge` | AI 綜合判斷 API（約 10～30 秒） |
 | `src/app/cases` | 處罰案例庫瀏覽與搜尋 |
 
+## AI 判斷的費用與設定
+
+只有 `/api/judge`（AI 綜合判斷）會產生費用，其餘功能（規則比對、相似案例、案例庫、GitHub Actions 每月更新）都不需付費。
+
+**計費方式**
+
+- 透過 Vercel AI Gateway 呼叫 `anthropic/claude-sonnet-5.5`。部署在 Vercel 上用 OIDC 驗證，不需要另外設定 API key。
+- 價格為原廠牌價，Vercel 不加價：輸入每百萬 token 2 美元，輸出每百萬 token 10 美元（2026-11 查詢）。
+- 一次檢測估計輸入 4,000～6,000 token、輸出 1,000～2,000 token，約 0.02～0.03 美元，1,000 次約 20～30 美元。這是依提示詞長度推估，尚未實測。
+
+**開通步驟**
+
+1. 到 Vercel Dashboard → tmuh team → **AI Gateway**，綁定信用卡。
+2. 依 Vercel 文件，免費額度只適用部分模型，Claude 很可能不在其中。綁卡後若 AI 判斷仍失敗，請購買 AI Gateway Credits（預付儲值）。
+3. 開通後不需要改程式或重新部署。
+
+**控制費用（建議都要設定）**
+
+- **預算上限（budget）**：網站公開，任何人按「開始檢測」都會扣額度，務必設上限。
+- **自動加值（auto top-up）**：預設關閉。保持關閉時，額度用完 AI 判斷會停止，不會自動扣卡；網站會改為只顯示規則比對結果（`/api/judge` 回傳 502，前端顯示「規則初判」）。
+- **改用較便宜的模型**：修改 `src/lib/judge.ts` 的 `MODEL` 常數，例如換成 Claude Haiku。成本較低，但判斷品質可能下降。
+- 目前只限制單次輸入 4,000 字，沒有頻率限制；被大量呼叫時可考慮加上 Vercel BotID 或 rate limit。
+
+**其他服務**
+
+- Vercel 託管：若 team 是 Hobby（免費）方案，目前用量不會產生費用，但 Hobby 僅限非商業用途。
+- GitHub：公開 repo 的 Actions 免費。
+
 ## 後續規劃
 
 - 納入衛福部食藥署食品專區內容（認定準則附件二、健康食品許可功效、全國違規廣告資料庫）
