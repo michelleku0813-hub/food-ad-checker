@@ -42,6 +42,8 @@ npm run dev
 | 路徑 | 說明 |
 |---|---|
 | `scripts/fetch_taipei.py` | 抓取公告、解析 PDF、抽出被罰詞句 |
+| `scripts/export_slides.py` | 把 `slides/src` 的簡報原始檔輸出成 PDF、PPTX（需要 Google Chrome） |
+| `slides/` | 12 類違規廣告簡報：合輯 PDF、各類 PDF 與 PPTX、原始檔 |
 | `data/cases.json` | 處罰案例資料 |
 | `src/lib/regulations.ts` | 法條原文、附件一允許詞句、風險詞規則 |
 | `src/lib/analyze.ts` | 規則比對與相似案例檢索 |
